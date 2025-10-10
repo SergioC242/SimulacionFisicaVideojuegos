@@ -1,6 +1,6 @@
 #include "Particle.h"
 
-Particle::Particle(Vector3D Pos, Vector3D Vel) : vel(Vel)
+Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass) : vel(Vel), Mass(mass), acceleration(Accel)
 {
     pose = new physx::PxTransform(physx::PxVec3(Pos.getX(), Pos.getY(), Pos.getZ()));
     renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(0.5f)), pose, Vector4(1, 0, 0, 1));

@@ -34,6 +34,7 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 Particle* myParticle = nullptr;
+Particle* canonBall = nullptr;
 
 
 // Initialize physics engine
@@ -79,9 +80,13 @@ void initPhysics(bool interactive)
 	RenderItem* Sphere4 = new RenderItem(a, b4, c);
 
 	Vector3D particlePos = Vector3D(5, 20, 5);
-	Vector3D particleVel = Vector3D(10, 0, 0); // Inicialmente en reposo
+	Vector3D particleVel = Vector3D(1, 0, 0); // Inicialmente en reposo
 
 	myParticle = new Particle(particlePos, particleVel);
+
+	particleVel = Vector3D(1, 0, 0);
+	ballPos = Vector3D(10, 50, 10);
+	canonBall = new Particle(ballPos, Vector3D(50, 0, 0), Vector3D(0, -9.8f, 0), 10.0f); // Mass of 10.0 kilogram
 
 
 	gScene = gPhysics->createScene(sceneDesc);
@@ -99,6 +104,7 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 	myParticle->integrate(t);
+	canonBall->integrate(t);
 }
 
 // Function to clean data
