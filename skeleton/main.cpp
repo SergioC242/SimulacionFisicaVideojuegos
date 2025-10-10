@@ -10,7 +10,10 @@
 
 #include <iostream>
 
-std::string display_text = "This is a test";
+#include "Vector3D.h"
+#include "Particle.h"
+
+std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
 
 
 using namespace physx;
@@ -29,6 +32,8 @@ PxPvd*                  gPvd        = NULL;
 PxDefaultCpuDispatcher*	gDispatcher = NULL;
 PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
+
+Particle* myParticle = nullptr;
 
 
 // Initialize physics engine
@@ -53,6 +58,32 @@ void initPhysics(bool interactive)
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.simulationEventCallback = &gContactReportCallback;
+
+	Vector3D ballPos = Vector3D(10, 10, 10);
+
+	PxShape* a = CreateShape(physx::PxSphereGeometry(1));
+	PxTransform* b = new PxTransform( 0, 0 , 0 );
+	Vector4 c = {1, 1, 1, 1};
+	RenderItem* Sphere = new RenderItem(a, b, c);
+
+	PxTransform* b2 = new PxTransform(ballPos.getX(), 0, 0);
+	c = { 1, 0, 0, 1 };
+	RenderItem* Sphere2 = new RenderItem(a, b2, c);
+
+	PxTransform* b3 = new PxTransform(0, ballPos.getY(), 0);
+	c = { 0, 1, 0, 1 };
+	RenderItem* Sphere3 = new RenderItem(a, b3, c);
+
+	PxTransform* b4 = new PxTransform(0, 0, ballPos.getZ());
+	c = { 0, 0, 1, 1 };
+	RenderItem* Sphere4 = new RenderItem(a, b4, c);
+
+	Vector3D particlePos = Vector3D(5, 20, 5);
+	Vector3D particleVel = Vector3D(10, 0, 0); // Inicialmente en reposo
+
+	myParticle = new Particle(particlePos, particleVel);
+
+
 	gScene = gPhysics->createScene(sceneDesc);
 	}
 
@@ -66,6 +97,8 @@ void stepPhysics(bool interactive, double t)
 
 	gScene->simulate(t);
 	gScene->fetchResults(true);
+
+	myParticle->integrate(t);
 }
 
 // Function to clean data
