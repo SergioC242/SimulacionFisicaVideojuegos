@@ -34,7 +34,9 @@ PxScene*				gScene      = NULL;
 ContactReportCallback gContactReportCallback;
 
 Particle* myParticle = nullptr;
-Particle* canonBall = nullptr;
+//<Particle*> canonBall = nullptr;
+//vector de punteros particle
+std::vector<Particle*> canonballs;
 
 
 // Initialize physics engine
@@ -86,7 +88,7 @@ void initPhysics(bool interactive)
 
 	particleVel = Vector3D(1, 0, 0);
 	ballPos = Vector3D(10, 50, 10);
-	canonBall = new Particle(ballPos, Vector3D(50, 0, 0), Vector3D(0, -9.8f, 0), 10.0f); // Mass of 10.0 kilogram
+	
 
 
 	gScene = gPhysics->createScene(sceneDesc);
@@ -104,6 +106,7 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 	myParticle->integrate(t);
+	for (auto canonBall : canonballs)
 	canonBall->integrate(t);
 }
 
@@ -122,6 +125,11 @@ void cleanupPhysics(bool interactive)
 	gPvd->release();
 	transport->release();
 	
+	for(Particle* canonBall : canonballs)
+	{
+		delete canonBall;
+	}
+
 	gFoundation->release();
 	}
 
@@ -136,6 +144,30 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	//case ' ':	break;
 	case ' ':
 	{
+		break;
+	}
+	case 'B':
+	{
+		//canonballs.push_back(new Particle(, Vector3D(50, 0, 0), Vector3D(0, -9.8f, 0), 10.0f)); // Mass of 10.0 kilogram
+		Camera* cam = GetCamera();
+		if (cam)
+		{
+			// Posición y dirección de la cámara (physx::PxVec3)
+			physx::PxVec3 eye = cam->getEye();
+			physx::PxVec3 dir = cam->getDir(); // vector unitario hacia delante
+
+			// Convertir a Vector3D (tu clase) y calcular velocidad inicial
+			Vector3D spawnPos(eye.x, eye.y, eye.z);
+			const float launchSpeed = 50.0f;
+			Vector3D spawnVel(dir.x * launchSpeed, dir.y * launchSpeed, dir.z * launchSpeed);
+
+			// Aceleración/gravedad y masa para la bala
+			Vector3D gravity(0.0f, -9.8f, 0.0f);
+			float mass = 10.0f;
+
+			// Crear y almacenar la cannonball
+			canonballs.push_back(new Particle(spawnPos, spawnVel, gravity, mass));
+		}
 		break;
 	}
 	default:
