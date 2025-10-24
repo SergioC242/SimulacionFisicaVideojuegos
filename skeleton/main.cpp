@@ -12,6 +12,7 @@
 
 #include "Vector3D.h"
 #include "Particle.h"
+#include "ParticleSystem.h"
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
 
@@ -106,6 +107,7 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 	myParticle->integrate(t);
+
 	for (auto canonBall : canonballs)
 	canonBall->integrate(t);
 }
