@@ -1,6 +1,7 @@
 #include "Particle.h"
 
-Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass) : vel(Vel), Mass(mass), acceleration(Accel)
+Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float lifespam) : 
+    vel(Vel), Mass(mass), acceleration(Accel), LifeSpan(lifespam)
 {
     pose = new physx::PxTransform(physx::PxVec3(Pos.getX(), Pos.getY(), Pos.getZ()));
     renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(0.5f)), pose, Vector4(1, 0, 0, 1));
@@ -15,6 +16,8 @@ Particle::~Particle()
 
 void Particle::integrate(float duration)
 {
+	// Actualizar el tiempo de vida
+    LifeSpan -= duration;
 	//metodo integracion de Euler semi-implicito
     if (duration <= 0.0f) return;
 

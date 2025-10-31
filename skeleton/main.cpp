@@ -39,6 +39,9 @@ Particle* myParticle = nullptr;
 //vector de punteros particle
 std::vector<Particle*> canonballs;
 
+//sistema de ñparticulas
+ParticleSystem* Ps;
+
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -90,7 +93,7 @@ void initPhysics(bool interactive)
 	particleVel = Vector3D(1, 0, 0);
 	ballPos = Vector3D(10, 50, 10);
 	
-
+	Ps = new ParticleSystem(5.0f, 2.0f, Vector3D(0, -9.8f, 0), 10.0f);
 
 	gScene = gPhysics->createScene(sceneDesc);
 	}
@@ -107,6 +110,8 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 	myParticle->integrate(t);
+	Ps->updateAll(t);
+	Ps->integrateAll(t);
 
 	for (auto canonBall : canonballs)
 	canonBall->integrate(t);
