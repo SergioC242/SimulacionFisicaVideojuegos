@@ -19,6 +19,9 @@ public:
 		force += f;
 	}
 
+	Vector3D getVelocity() const { return vel; }
+	physx::PxTransform* getPose() const { return pose; }
+
 
 private:
 	Vector3D vel;

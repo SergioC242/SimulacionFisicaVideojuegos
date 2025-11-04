@@ -14,6 +14,7 @@
 #include "Particle.h"
 #include "ParticleSystem.h"
 #include "GravityForceGenerator.h"
+#include "WindForceGenerator.h"
 
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
@@ -97,7 +98,10 @@ void initPhysics(bool interactive)
 	
 	Ps = new ParticleSystem(5.0f, 2.0f, Vector3D(0, 0, 0), 10.0f);
 	GravityForceGenerator* gravity1 = new GravityForceGenerator(Vector3D(0, -9.8f, 0));
-	Ps->addForceGenerator(gravity1);
+	//Ps->addForceGenerator(gravity1);
+	
+	WindForceGenerator* wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
+	Ps->addForceGenerator(wind1);
 
 	gScene = gPhysics->createScene(sceneDesc);
 	}
