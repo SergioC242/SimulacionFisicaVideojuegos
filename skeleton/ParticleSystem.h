@@ -1,12 +1,17 @@
 #include "Particle.h"
 #include <vector>
 #include "Vector3D.h"
+#include <PxPhysicsAPI.h>
+#include "ForceGenerator.h"
+using namespace physx;
 
 #pragma once
 class ParticleSystem
 {
 private:
 	std::vector<Particle*> particles;
+	std::vector<ForceGenerator*> forceGenerators;
+
 	//acceleration, spawn rate, distribution, life span, etc.
 	Vector3D globalAcceleration;
 	float spawnRate;
@@ -24,9 +29,18 @@ private:
 		return min + r;
 	}
 
+	
+
+
 public:
+
+	void addForceGenerator(ForceGenerator* fg)
+	{
+		forceGenerators.push_back(fg);
+	}
+
 	//constructor con parametros spawn rate, distribution radius, global acceleration etc.
-	ParticleSystem(float spawnRate = 10.0f, float distributionRadius = 5.0f, Vector3D globalAcc = Vector3D(0, -9.8f, 0), float particleLifeSpan = 5.0f)
+	ParticleSystem(float spawnRate = 10.0f, float distributionRadius = 5.0f, Vector3D globalAcc = Vector3D(0, 0, 0), float particleLifeSpan = 5.0f)
 		: spawnRate(spawnRate), distributionRadius(distributionRadius), globalAcceleration(globalAcc), particleLifeSpan(particleLifeSpan), timeSinceLastSpawn(0.0f)
 	{
 	}
@@ -46,6 +60,7 @@ public:
 
 	void updateAll(double t)
 	{
+		
 		//create new particles based on spawn rate
 		timeSinceLastSpawn += t;
 		while (timeSinceLastSpawn >= (1.0f /spawnRate))
@@ -59,29 +74,34 @@ public:
 			addParticle(newParticle);
 			timeSinceLastSpawn -= (1.0f / spawnRate);
 		}
+		clearDeadParticles();
 	}
 	void integrateAll(double t)
 	{
 		for (Particle* p : particles)
 		{
+			for (ForceGenerator* fg : forceGenerators)
+			{
+				fg->updateForce(p, t);
+			}
 			p->integrate(t);
 		}
 	}
 
 	void clearDeadParticles()
 	{
-		for (Particle* p : particles)
-		{
-			if (!p->isAlive())
-			{
-				auto it = std::find(particles.begin(), particles.end(), p);
-				if (it != particles.end())
-				{
-					delete p;
-					particles.erase(it);
-				}
-			}
-		}
+		//for(auto it = particles.begin(); it != particles.end(); )
+		//{
+		//	if (!(*it)->isAlive())
+		//	{
+		//		delete *it;
+		//		it = particles.erase(it);
+		//	}
+		//	else
+		//	{
+		//		++it;
+		//	}
+		//}
 	}
 };
 

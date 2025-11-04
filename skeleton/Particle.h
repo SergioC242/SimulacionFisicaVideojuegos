@@ -13,16 +13,21 @@ public:
 	void changeAcceleration(Vector3D Acc) { acceleration = Acc; };
 	float getCineticEnergy() { return 0.5f * Mass * vel.Modulo() * vel.Modulo(); };
 
-	bool isAlive() { return LifeSpan > 0.0f; };
+	bool isAlive() const { return LifeSpan > 0.0f; };
+	float getMass() const { return Mass; };
+	void addForce(const Vector3D& f) {
+		force += f;
+	}
 
 
 private:
 	Vector3D vel;
-	physx::PxTransform* pose;
-	RenderItem* renderItem;
+	physx::PxTransform* pose = nullptr;
+	RenderItem* renderItem = nullptr;
 	Vector3D acceleration = Vector3D(0, 0, 0);
 	float damping = 0.99;
 	float LifeSpan; 
 	float Mass; // Not used if not projectile
+	Vector3D force;
 };
 

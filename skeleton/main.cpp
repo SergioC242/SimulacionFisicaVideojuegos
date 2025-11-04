@@ -13,6 +13,8 @@
 #include "Vector3D.h"
 #include "Particle.h"
 #include "ParticleSystem.h"
+#include "GravityForceGenerator.h"
+
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
 
@@ -93,7 +95,9 @@ void initPhysics(bool interactive)
 	particleVel = Vector3D(1, 0, 0);
 	ballPos = Vector3D(10, 50, 10);
 	
-	Ps = new ParticleSystem(5.0f, 2.0f, Vector3D(0, -9.8f, 0), 10.0f);
+	Ps = new ParticleSystem(5.0f, 2.0f, Vector3D(0, 0, 0), 10.0f);
+	GravityForceGenerator* gravity1 = new GravityForceGenerator(Vector3D(0, -9.8f, 0));
+	Ps->addForceGenerator(gravity1);
 
 	gScene = gPhysics->createScene(sceneDesc);
 	}
