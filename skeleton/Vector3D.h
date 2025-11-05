@@ -27,6 +27,11 @@ public:
 		return (v.x * v2.x) + (v.y * v2.y) + (v.z * v2.z);
 	}
 
+	// this * Vector3D
+	float Escalar(const Vector3D& v) const {
+		return (x * v.x) + (y * v.y) + (z * v.z);
+	}
+
 	//override operayor +
 	Vector3D operator+(const Vector3D& v) {
 		return Vector3D(x + v.x, y + v.y, z + v.z);

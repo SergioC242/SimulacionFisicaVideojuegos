@@ -19,6 +19,8 @@ public:
 		force += f;
 	}
 
+	void setVelocity(const Vector3D& v) { vel = v; } //solo para que el barco rote la velocidad segun su rumbo NO USAR PARA NADA MAS
+
 	Vector3D getVelocity() const { return vel; }
 	physx::PxTransform* getPose() const { return pose; }
 

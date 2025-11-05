@@ -15,6 +15,7 @@
 #include "ParticleSystem.h"
 #include "GravityForceGenerator.h"
 #include "WindForceGenerator.h"
+#include "Boat.h"
 
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
@@ -44,6 +45,9 @@ std::vector<Particle*> canonballs;
 
 //sistema de ñparticulas
 ParticleSystem* Ps;
+
+//Barco
+Boat* boat;
 
 
 // Initialize physics engine
@@ -104,6 +108,8 @@ void initPhysics(bool interactive)
 	Ps->addForceGenerator(wind1);
 
 	gScene = gPhysics->createScene(sceneDesc);
+
+	boat = new Boat({0, 0, 0}, {10, 0, 0});
 	}
 
 
@@ -123,6 +129,7 @@ void stepPhysics(bool interactive, double t)
 
 	for (auto canonBall : canonballs)
 	canonBall->integrate(t);
+	boat->update(t);
 }
 
 // Function to clean data
@@ -183,6 +190,22 @@ void keyPress(unsigned char key, const PxTransform& camera)
 			// Crear y almacenar la cannonball
 			canonballs.push_back(new Particle(spawnPos, spawnVel, gravity, mass));
 		}
+		break;
+	}
+	case 'I':{
+		boat->largarVela(0.1f);
+		break;
+	}
+	case 'K':{
+		boat->cazarVela(0.1f);
+		break;
+	}
+	case 'J':{
+		boat->turnRight();
+		break;
+	}
+	case 'L':{
+		boat->turnLeft();
 		break;
 	}
 	default:
