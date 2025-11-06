@@ -41,6 +41,13 @@ public:
         // Actualiza la rotacion del barco segun timon
         headingAngle += palaAngle * turnRate * t;
 
+		//saca el angulo en celsioes entre 0 y 360
+        if (headingAngle < 0.0f)
+            headingAngle += 2.0f * 3.14159f;
+        else if (headingAngle >= 2.0f * 3.14159f)
+			headingAngle -= 2.0f * 3.14159f;
+		std::cout << "Boat Heading: " << headingAngle * (180.0f / 3.14159f) << " degrees" << std::endl;
+
         // Calcula las fuerzas del viento y aplica
         applyWindPhysics(t);
 
@@ -123,13 +130,11 @@ private:
 		// ---- Contra el viento ---- (no navega)
         if (angleDeg <= criticalAngleCeñida)
         {
-            std::cout << "Viento demasiado de frente: no se puede avanzar" << std::endl;
             efficiency = 0.0f;  // sin fuerza de vela
         }
         // ---- Ceñida ----
         if (angleDeg > criticalAngleCeñida &&  angleDeg < 70.0f)
         {
-			std::cout << "ceñida" << std::endl;
             float sailEffect = max(0.0f, 1.0f - (sailAngle - 5.0f) / 35.0f);
             efficiency = 0.6f * sailEffect;
 
@@ -137,7 +142,6 @@ private:
         // ---- Al traves (≈90 ) ----
         else if (angleDeg >= 70.0f && angleDeg <= 110.0f)
         {
-			std::cout << "al traves" << std::endl;
             // Maxima eficiencia base = 60 , multiplicada por efecto del angulo vela
             float sailEffect = 1.0f - std::abs(sailAngle - 45.0f) / 45.0f; // mejor rendimiento con 45 
             efficiency = (0.6f + 0.2f) * max(0.0f, sailEffect); // 20  extra por travesia
@@ -145,7 +149,6 @@ private:
         // ---- Popa (viento detras) ----
         else if (angleDeg > 160.0f)
         {
-			std::cout << "popa" << std::endl;
             // Cuanto mas cerca del viento directo (180 ), mas rendimiento
             float rel = min(1.0f, (angleDeg - 160.0f) / 20.0f); // 160 →0 , 180 →100 
             efficiency = 0.6f * rel * (1.0f - (sailAngle - 90.0f) / 90.0f); // vela abierta rinde mas
@@ -176,7 +179,15 @@ private:
         // Fuerza final aplicada al barco
         //Vector3D sailForce = sailForceDir * sailForceMagnitude * sailEffectFactor;
 
-        Vector3D sailForce = boatDir * windSpeed * efficiency * sailEffectFactor;
+        Vector3D localForward(-1, 0, 0);
+
+        // Transformarla según la rotación actual del barco
+        physx::PxQuat rotation = getPose()->q; // orientación real del cuerpo
+        physx::PxVec3 dirGlobal = rotation.rotate(physx::PxVec3(localForward.getX(), localForward.getY(), localForward.getZ()));
+
+        Vector3D forwardDir(dirGlobal.x, dirGlobal.y, dirGlobal.z);
+
+        Vector3D sailForce = localForward * windSpeed * efficiency * sailEffectFactor;
         // Aplicamos la fuerza a la partícula del barco
         addForce(sailForce);
 
@@ -184,7 +195,7 @@ private:
         Vector3D sideDir(-boatDir.getZ(), 0, boatDir.getX()); // perpendicular en el plano XZ
         float sideForceMag = windSpeed * (1.0f - efficiency) * 0.2f;
         Vector3D sideForce = sideDir * sideForceMag;
-        addForce(sideForce);
+        //addForce(sideForce);
 
 
 
@@ -204,8 +215,8 @@ private:
         Vector3D keelForce = rightDir * (-lateralSpeed * getMass() * keelEfficiency);
 
         // Aplica solo si es significativo
-        if (std::abs(lateralSpeed) > 0.01f)
-            addForce(keelForce);
+        if (std::abs(lateralSpeed) > 0.01f);
+            //addForce(keelForce);
 
     }
 };

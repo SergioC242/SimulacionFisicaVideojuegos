@@ -16,6 +16,7 @@
 #include "GravityForceGenerator.h"
 #include "WindForceGenerator.h"
 #include "Boat.h"
+#include "Boat2.h"
 
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
@@ -47,7 +48,7 @@ std::vector<Particle*> canonballs;
 ParticleSystem* Ps;
 
 //Barco
-Boat* boat;
+Boat2* boat;
 
 
 // Initialize physics engine
@@ -109,7 +110,7 @@ void initPhysics(bool interactive)
 
 	gScene = gPhysics->createScene(sceneDesc);
 
-	boat = new Boat({0, 0, 0}, {10, 0, 0});
+	boat = new Boat2({0, 0, 0}, {10, 0, 0});
 	}
 
 
@@ -170,26 +171,27 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	}
 	case 'B':
 	{
+		boat->MoveForward();
 		//canonballs.push_back(new Particle(, Vector3D(50, 0, 0), Vector3D(0, -9.8f, 0), 10.0f)); // Mass of 10.0 kilogram
-		Camera* cam = GetCamera();
-		if (cam)
-		{
-			// Posición y dirección de la cámara (physx::PxVec3)
-			physx::PxVec3 eye = cam->getEye();
-			physx::PxVec3 dir = cam->getDir(); // vector unitario hacia delante
-
-			// Convertir a Vector3D (tu clase) y calcular velocidad inicial
-			Vector3D spawnPos(eye.x, eye.y, eye.z);
-			const float launchSpeed = 50.0f;
-			Vector3D spawnVel(dir.x * launchSpeed, dir.y * launchSpeed, dir.z * launchSpeed);
-
-			// Aceleración/gravedad y masa para la bala
-			Vector3D gravity(0.0f, -9.8f, 0.0f);
-			float mass = 10.0f;
-
-			// Crear y almacenar la cannonball
-			canonballs.push_back(new Particle(spawnPos, spawnVel, gravity, mass));
-		}
+		//Camera* cam = GetCamera();
+		//if (cam)
+		//{
+		//	// Posición y dirección de la cámara (physx::PxVec3)
+		//	physx::PxVec3 eye = cam->getEye();
+		//	physx::PxVec3 dir = cam->getDir(); // vector unitario hacia delante
+		//
+		//	// Convertir a Vector3D (tu clase) y calcular velocidad inicial
+		//	Vector3D spawnPos(eye.x, eye.y, eye.z);
+		//	const float launchSpeed = 50.0f;
+		//	Vector3D spawnVel(dir.x * launchSpeed, dir.y * launchSpeed, dir.z * launchSpeed);
+		//
+		//	// Aceleración/gravedad y masa para la bala
+		//	Vector3D gravity(0.0f, -9.8f, 0.0f);
+		//	float mass = 10.0f;
+		//
+		//	// Crear y almacenar la cannonball
+		//	canonballs.push_back(new Particle(spawnPos, spawnVel, gravity, mass));
+		//}
 		break;
 	}
 	case 'I':{
