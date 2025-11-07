@@ -4,7 +4,7 @@ Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float
     vel(Vel), Mass(mass), acceleration(Accel), LifeSpan(lifespam)
 {
     pose = new physx::PxTransform(physx::PxVec3(Pos.getX(), Pos.getY(), Pos.getZ()));
-    renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(0.5f)), pose, Vector4(1, 0, 0, 1));
+    renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(0.5f)), pose, Vector4(0, 0, 0.5, 1));
 }
 
 Particle::~Particle()

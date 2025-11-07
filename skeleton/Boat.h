@@ -179,15 +179,14 @@ private:
         // Fuerza final aplicada al barco
         //Vector3D sailForce = sailForceDir * sailForceMagnitude * sailEffectFactor;
 
-        Vector3D localForward(-1, 0, 0);
+        Vector3D localForward(0, 0, 1);
 
         // Transformarla según la rotación actual del barco
         physx::PxQuat rotation = getPose()->q; // orientación real del cuerpo
         physx::PxVec3 dirGlobal = rotation.rotate(physx::PxVec3(localForward.getX(), localForward.getY(), localForward.getZ()));
 
         Vector3D forwardDir(dirGlobal.x, dirGlobal.y, dirGlobal.z);
-
-        Vector3D sailForce = localForward * windSpeed * efficiency * sailEffectFactor;
+        Vector3D sailForce = localForward * windSpeed * efficiency * sailEffectFactor * 100;
         // Aplicamos la fuerza a la partícula del barco
         addForce(sailForce);
 

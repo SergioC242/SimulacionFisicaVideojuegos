@@ -43,4 +43,8 @@ public:
         // aplicar la fuerza a la partícula
         particle->addForce(force);
     }
+
+    void setWindVelocity(const Vector3D& windVel) {
+        windVelocity = windVel;
+	}
 };

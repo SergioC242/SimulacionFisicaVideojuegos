@@ -50,6 +50,9 @@ ParticleSystem* Ps;
 //Barco
 Boat2* boat;
 
+//viento
+WindForceGenerator* wind1;
+bool windActive = true;
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -101,11 +104,13 @@ void initPhysics(bool interactive)
 	particleVel = Vector3D(1, 0, 0);
 	ballPos = Vector3D(10, 50, 10);
 	
-	Ps = new ParticleSystem(5.0f, 2.0f, Vector3D(0, 0, 0), 10.0f);
+	//Ps = new ParticleSystem(5.0f, 50.0f, Vector3D(0, 0, 0), Vector3D(-10, 0, -10), 10.0f);
+	// OPCIÓN 2: Lluvia con viento (más realista)
+	Ps = new ParticleSystem(70.0f,	200.0f,	100.0f,	70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 15.0f);
 	GravityForceGenerator* gravity1 = new GravityForceGenerator(Vector3D(0, -9.8f, 0));
 	//Ps->addForceGenerator(gravity1);
 	
-	WindForceGenerator* wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
+	wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
 	Ps->addForceGenerator(wind1);
 
 	gScene = gPhysics->createScene(sceneDesc);
@@ -161,59 +166,78 @@ void keyPress(unsigned char key, const PxTransform& camera)
 {
 	PX_UNUSED(camera);
 
-	switch(toupper(key))
+	switch (toupper(key))
 	{
-	//case 'B': break;
-	//case ' ':	break;
+		//case 'B': break;
+		//case ' ':	break;
 	case ' ':
 	{
 		break;
 	}
 	case 'B':
 	{
-		boat->MoveForward();
+		//boat->MoveForward();
 		//canonballs.push_back(new Particle(, Vector3D(50, 0, 0), Vector3D(0, -9.8f, 0), 10.0f)); // Mass of 10.0 kilogram
-		//Camera* cam = GetCamera();
-		//if (cam)
-		//{
-		//	// Posición y dirección de la cámara (physx::PxVec3)
-		//	physx::PxVec3 eye = cam->getEye();
-		//	physx::PxVec3 dir = cam->getDir(); // vector unitario hacia delante
-		//
-		//	// Convertir a Vector3D (tu clase) y calcular velocidad inicial
-		//	Vector3D spawnPos(eye.x, eye.y, eye.z);
-		//	const float launchSpeed = 50.0f;
-		//	Vector3D spawnVel(dir.x * launchSpeed, dir.y * launchSpeed, dir.z * launchSpeed);
-		//
-		//	// Aceleración/gravedad y masa para la bala
-		//	Vector3D gravity(0.0f, -9.8f, 0.0f);
-		//	float mass = 10.0f;
-		//
-		//	// Crear y almacenar la cannonball
-		//	canonballs.push_back(new Particle(spawnPos, spawnVel, gravity, mass));
-		//}
+		Camera* cam = GetCamera();
+		if (cam)
+		{
+			// Posición y dirección de la cámara (physx::PxVec3)
+			physx::PxVec3 eye = cam->getEye();
+			physx::PxVec3 dir = cam->getDir(); // vector unitario hacia delante
+
+			// Convertir a Vector3D (tu clase) y calcular velocidad inicial
+			Vector3D spawnPos(eye.x, eye.y, eye.z);
+			const float launchSpeed = 50.0f;
+			Vector3D spawnVel(dir.x * launchSpeed, dir.y * launchSpeed, dir.z * launchSpeed);
+
+			// Aceleración/gravedad y masa para la bala
+			Vector3D gravity(0.0f, -9.8f, 0.0f);
+			float mass = 10.0f;
+
+			// Crear y almacenar la cannonball
+			canonballs.push_back(new Particle(spawnPos, spawnVel, gravity, mass));
+		}
 		break;
 	}
-	case 'I':{
+	case 'Z':
+	{
+		// Toggle del viento
+		if (windActive)
+		{
+			// Desactivar viento (establecer velocidad a 0)
+			wind1->setWindVelocity(Vector3D(0.0f, 0.0f, 0.0f));
+			windActive = false;
+			std::cout << "Viento DESACTIVADO" << std::endl;
+		}
+		else
+		{
+			// Activar viento (restaurar velocidad original)
+			wind1->setWindVelocity(Vector3D(50.0f, 0.0f, 0.0f));
+			windActive = true;
+			std::cout << "Viento ACTIVADO" << std::endl;
+		}
+		break;
+	}
+	case 'I': {
 		boat->largarVela(0.1f);
 		break;
 	}
-	case 'K':{
+	case 'K': {
 		boat->cazarVela(0.1f);
 		break;
 	}
-	case 'J':{
+	case 'J': {
 		boat->turnRight();
 		break;
 	}
-	case 'L':{
+	case 'L': {
 		boat->turnLeft();
 		break;
 	}
 	default:
 		break;
 	}
-}
+	};
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
