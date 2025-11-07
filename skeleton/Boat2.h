@@ -23,7 +23,7 @@ public:
         : Particle(position, Vector3D(0, 0, 0), Vector3D(0, 0, 0), 50.0f),
         windVelocity(windVel),
         headingAngle(headingDeg* (3.14159f / 180.0f)),
-        turnRate(5.0f),
+        turnRate(2.0f),
         palaAngle(0.0f),
         sailAngle(45.0f),       
         sailChangeRate(30.0f),  
