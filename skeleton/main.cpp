@@ -17,6 +17,7 @@
 #include "WindForceGenerator.h"
 #include "Boat.h"
 #include "Boat2.h"
+#include "SpringForceGenerator.h"
 
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
@@ -27,16 +28,16 @@ using namespace physx;
 PxDefaultAllocator		gAllocator;
 PxDefaultErrorCallback	gErrorCallback;
 
-PxFoundation*			gFoundation = NULL;
-PxPhysics*				gPhysics	= NULL;
+PxFoundation* gFoundation = NULL;
+PxPhysics* gPhysics = NULL;
 
 
-PxMaterial*				gMaterial	= NULL;
+PxMaterial* gMaterial = NULL;
 
-PxPvd*                  gPvd        = NULL;
+PxPvd* gPvd = NULL;
 
-PxDefaultCpuDispatcher*	gDispatcher = NULL;
-PxScene*				gScene      = NULL;
+PxDefaultCpuDispatcher* gDispatcher = NULL;
+PxScene* gScene = NULL;
 ContactReportCallback gContactReportCallback;
 
 Particle* myParticle = nullptr;
@@ -54,6 +55,22 @@ Boat2* boat;
 WindForceGenerator* wind1;
 bool windActive = true;
 
+static void generateSpringDemo() {
+	// First one standard spring uniting 2 particles
+	Particle* p1 = new Particle({ -10.0,10.0,0.0 }, { 0.0,0.0,0.0 }, { 0.0,0.0,0.0 }, 0.85, 60);
+	Particle* p2 = new Particle({ 10.0,10.0,0.0 }, { 0.0,0.0,0.0 }, { 0.0,0.0,0.0 }, 0.85, 60);
+	p2->setMass(2.0);
+
+	SpringForceGenerator* f1 = new SpringForceGenerator(p2, 1, 10);
+	p1->addForceGenerator(f1);
+
+	SpringForceGenerator* f2 = new SpringForceGenerator(p1, 1, 10);
+	p2->addForceGenerator(f2);
+
+	canonballs.push_back(p1);
+	canonballs.push_back(p2);
+}
+
 // Initialize physics engine
 void initPhysics(bool interactive)
 {
@@ -63,9 +80,9 @@ void initPhysics(bool interactive)
 
 	gPvd = PxCreatePvd(*gFoundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-	gPvd->connect(*transport,PxPvdInstrumentationFlag::eALL);
+	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
-	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(),true,gPvd);
+	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
@@ -80,8 +97,8 @@ void initPhysics(bool interactive)
 	Vector3D ballPos = Vector3D(10, 10, 10);
 
 	PxShape* a = CreateShape(physx::PxSphereGeometry(1));
-	PxTransform* b = new PxTransform( 0, 0 , 0 );
-	Vector4 c = {1, 1, 1, 1};
+	PxTransform* b = new PxTransform(0, 0, 0);
+	Vector4 c = { 1, 1, 1, 1 };
 	RenderItem* Sphere = new RenderItem(a, b, c);
 
 	PxTransform* b2 = new PxTransform(ballPos.getX(), 0, 0);
@@ -103,20 +120,23 @@ void initPhysics(bool interactive)
 
 	particleVel = Vector3D(1, 0, 0);
 	ballPos = Vector3D(10, 50, 10);
-	
+
 	//Ps = new ParticleSystem(5.0f, 50.0f, Vector3D(0, 0, 0), Vector3D(-10, 0, -10), 10.0f);
 	// OPCIÓN 2: Lluvia con viento (más realista)
-	Ps = new ParticleSystem(70.0f,	200.0f,	100.0f,	70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 15.0f);
-	GravityForceGenerator* gravity1 = new GravityForceGenerator(Vector3D(0, -9.8f, 0));
-	//Ps->addForceGenerator(gravity1);
-	
-	wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
-	Ps->addForceGenerator(wind1);
+	//Ps = new ParticleSystem(70.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 15.0f);
+	//GravityForceGenerator* gravity1 = new GravityForceGenerator(Vector3D(0, -9.8f, 0));
+	////Ps->addForceGenerator(gravity1);
+	//
+	//wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
+	//Ps->addForceGenerator(wind1);
 
 	gScene = gPhysics->createScene(sceneDesc);
 
-	boat = new Boat2({0, 0, 0}, {10, 0, 0});
-	}
+	//boat = new Boat2({ 0, 0, 0 }, { 10, 0, 0 });
+
+	generateSpringDemo();
+}
+
 
 
 // Function to configure what happens in each step of physics
@@ -129,13 +149,13 @@ void stepPhysics(bool interactive, double t)
 	gScene->simulate(t);
 	gScene->fetchResults(true);
 
-	myParticle->integrate(t);
-	Ps->updateAll(t);
-	Ps->integrateAll(t);
+	//myParticle->integrate(t);
+	//Ps->updateAll(t);
+	//Ps->integrateAll(t);
 
 	for (auto canonBall : canonballs)
-	canonBall->integrate(t);
-	boat->update(t);
+		canonBall->integrate(t);
+	if(boat)boat->update(t);
 }
 
 // Function to clean data
@@ -148,18 +168,18 @@ void cleanupPhysics(bool interactive)
 	gScene->release();
 	gDispatcher->release();
 	// -----------------------------------------------------
-	gPhysics->release();	
+	gPhysics->release();
 	PxPvdTransport* transport = gPvd->getTransport();
 	gPvd->release();
 	transport->release();
-	
-	for(Particle* canonBall : canonballs)
+
+	for (Particle* canonBall : canonballs)
 	{
 		delete canonBall;
 	}
 
 	gFoundation->release();
-	}
+}
 
 // Function called when a key is pressed
 void keyPress(unsigned char key, const PxTransform& camera)
@@ -237,7 +257,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	default:
 		break;
 	}
-	};
+};
 
 void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 {
@@ -246,7 +266,7 @@ void onCollision(physx::PxActor* actor1, physx::PxActor* actor2)
 }
 
 
-int main(int, const char*const*)
+int main(int, const char* const*)
 {
 #ifndef OFFLINE_EXECUTION 
 	extern void renderLoop();
@@ -254,7 +274,7 @@ int main(int, const char*const*)
 #else
 	static const PxU32 frameCount = 100;
 	initPhysics(false);
-	for(PxU32 i=0; i<frameCount; i++)
+	for (PxU32 i = 0; i < frameCount; i++)
 		stepPhysics(false);
 	cleanupPhysics(false);
 #endif

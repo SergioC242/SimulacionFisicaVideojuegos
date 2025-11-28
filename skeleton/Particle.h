@@ -2,6 +2,8 @@
 #include "RenderUtils.hpp"
 #include <PxPhysicsAPI.h>
 
+class ForceGenerator;
+
 #pragma once
 class Particle
 {
@@ -15,8 +17,13 @@ public:
 
 	bool isAlive() const { return LifeSpan > 0.0f; };
 	float getMass() const { return Mass; };
+	void setMass(float m) { Mass = m; };
 	void addForce(const Vector3D& f) {
 		force += f;
+	}
+
+	void addForceGenerator(ForceGenerator* fg) {
+		forceGenerators.push_back(fg);
 	}
 
 	void setVelocity(const Vector3D& v) { vel = v; } //solo para que el barco rote la velocidad segun su rumbo NO USAR PARA NADA MAS
@@ -34,5 +41,8 @@ private:
 	float LifeSpan; 
 	float Mass; // Not used if not projectile
 	Vector3D force;
+
+	//vector de forces
+	std::vector<ForceGenerator*> forceGenerators;
 };
 

@@ -1,4 +1,5 @@
 #include <math.h>
+#include <PxPhysicsAPI.h>
 
 #pragma once
 class Vector3D
@@ -79,6 +80,12 @@ public:
 		y *= f;
 		z *= f;
 		return *this;
+	}
+
+
+	//Vector3D = Vector3
+	Vector3D operator=(const physx::PxVec3& v) const {
+		return Vector3D(v.x, v.y, v.z);
 	}
 
 	//getters

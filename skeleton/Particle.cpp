@@ -1,5 +1,7 @@
 #include "Particle.h"
 
+#include "ForceGenerator.h"
+
 Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float lifespam) : 
     vel(Vel), Mass(mass), acceleration(Accel), LifeSpan(lifespam)
 {
@@ -27,7 +29,10 @@ void Particle::integrate(float duration)
     LifeSpan -= duration;
 	//metodo integracion de Euler semi-implicito
     if (duration <= 0.0f) return;
-
+    for (ForceGenerator* fg : forceGenerators)
+    {
+        fg->updateForce(this, duration);
+    }
     Vector3D totalAcc = acceleration + (force * (1.0f / Mass));
 
     // Actualizar velocidad con la aceleración (Euler semi-implícito)

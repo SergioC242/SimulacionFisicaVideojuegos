@@ -13,8 +13,8 @@ protected:
 	Particle* p2;
 
 public:
-	SpringForceGenerator(const double SS, float k1 = 0.1f, float k2 = 0.0f)
-		: _k(SS), k1(k1), k2(k2) {
+	SpringForceGenerator(Particle* P2, const double SS, double restingLength)
+		: _k(SS), p2(P2), _resting_length(restingLength) {
 	}
 
 	inline void setK(double k) { _k = k; }
@@ -30,15 +30,14 @@ public:
 			return;
 		}
 
-		Vector3 relative_pos_vector = p2->getPos() - particle->getPos();
-		Vector3 force;
+		Vector3D relative_pos_vector = p2->getPose() - particle->getPose();
+		Vector3D force;
 
 		// normalize: Normalize the relative_pos_vector and returns its length.
-		const float length = relative_pos_vector.normalize();
+		const float length = relative_pos_vector.Modulo();
 		const float delta_x = length - _resting_length;
 
-		force = relative_pos_vector * delta_x * _k;
-
+		force = relative_pos_vector.Normalize() * delta_x * _k;
 		particle->addForce(force);
 	}
 
