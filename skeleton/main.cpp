@@ -61,10 +61,10 @@ static void generateSpringDemo() {
 	Particle* p2 = new Particle({ 10.0,10.0,0.0 }, { 0.0,0.0,0.0 }, { 0.0,0.0,0.0 }, 0.85, 60);
 	p2->setMass(2.0);
 
-	SpringForceGenerator* f1 = new SpringForceGenerator(p2, 1, 10);
+	SpringForceGenerator* f1 = new SpringForceGenerator(p2, 1, 15);
 	p1->addForceGenerator(f1);
 
-	SpringForceGenerator* f2 = new SpringForceGenerator(p1, 1, 10);
+	SpringForceGenerator* f2 = new SpringForceGenerator(p1, 1, 15);
 	p2->addForceGenerator(f2);
 
 	canonballs.push_back(p1);
