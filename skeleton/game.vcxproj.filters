@@ -18,6 +18,8 @@
     <ClCompile Include="WindForceGenerator.cpp" />
     <ClCompile Include="Boat.cpp" />
     <ClCompile Include="Boat2.cpp" />
+    <ClCompile Include="SpringForceGenerator.cpp" />
+    <ClCompile Include="BuoyancyForceGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -37,6 +39,8 @@
     <ClInclude Include="WindForceGenerator.h" />
     <ClInclude Include="Boat.h" />
     <ClInclude Include="Boat2.h" />
+    <ClInclude Include="SpringForceGenerator.h" />
+    <ClInclude Include="BuoyancyForceGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">

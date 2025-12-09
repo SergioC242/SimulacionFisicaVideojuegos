@@ -2,11 +2,11 @@
 
 #include "ForceGenerator.h"
 
-Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float lifespam) : 
+Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float lifespam, Vector4 col) :
     vel(Vel), Mass(mass), acceleration(Accel), LifeSpan(lifespam)
 {
     pose = new physx::PxTransform(physx::PxVec3(Pos.getX(), Pos.getY(), Pos.getZ()));
-    renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(0.5f)), pose, Vector4(0, 0, 0.5, 1));
+    renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(0.5f)), pose, col);
 }
 
 Particle::~Particle()

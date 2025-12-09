@@ -8,7 +8,7 @@ class ForceGenerator;
 class Particle
 {
 public:
-	Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel = (0, 0, 0), float mass = 0.0f, float lifespam = 2.0f);
+	Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel = (0, 0, 0), float mass = 0.0f, float lifespam = 2.0f, Vector4 col = { 0, 0, 0.5, 1 });
 	~Particle();
 
 	void integrate(float duration);

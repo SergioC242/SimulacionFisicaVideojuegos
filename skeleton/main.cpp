@@ -18,6 +18,7 @@
 #include "Boat.h"
 #include "Boat2.h"
 #include "SpringForceGenerator.h"
+#include "BuoyancyForceGenerator.h"
 
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
@@ -70,6 +71,58 @@ static void generateSpringDemo() {
 	canonballs.push_back(p1);
 	canonballs.push_back(p2);
 }
+
+static void generateBuoyancyDemo()
+{
+	// Partícula representando el nivel del agua
+	// Su posición Y determina la altura del líquido
+	Particle* liquidLevel = new Particle(
+		{ 0.0, 5.0, 0.0 },    
+		{ 0.0, 0.0, 0.0 },
+		{ 0.0, 0.0, 0.0 },
+		1.0f,               
+		0.0f                  
+	);
+
+	// 2 partículas que flotarán
+	Particle* p1 = new Particle(
+		{ 0.0, 6.0, 0.0 },   
+		{ 0.0, 0.0, 0.0 },
+		{ 0.0, 0.0, 0.0 },
+		0.85f,
+		1000.0f, { 1, 1, 0, 1 }
+	);
+	p1->setMass(1.0f);
+
+	//Particle* p2 = new Particle(
+	//	{ 0.0, 7.0, 0.0 },    
+	//	{ 0.0, 0.0, 0.0 },
+	//	{ 0.0, 0.0, 0.0 },
+	//	0.85f,
+	//	2.0f
+	//);
+	//p2->setMass(1.5f);
+
+
+	BuoyancyForceGenerator* b1 = new BuoyancyForceGenerator(3.0f, 1.0f, 10.0f);
+	GravityForceGenerator* g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
+	//BuoyancyForceGenerator* b2 = new BuoyancyForceGenerator(3.0f, 1.0f, 1000.0f);
+
+	// Indicamos quién marca el nivel del agua
+	b1->setLiquidParticle(liquidLevel);
+	//b2->setLiquidParticle(liquidLevel);
+
+	// Asignamos generadores a las partículas
+	p1->addForceGenerator(b1);
+	p1->addForceGenerator(g1);
+	//p2->addForceGenerator(b1);
+
+	// Añadimos todo a la simulación
+	canonballs.push_back(liquidLevel);
+	canonballs.push_back(p1);
+	//canonballs.push_back(p2);
+}
+
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -134,7 +187,8 @@ void initPhysics(bool interactive)
 
 	//boat = new Boat2({ 0, 0, 0 }, { 10, 0, 0 });
 
-	generateSpringDemo();
+	//generateSpringDemo();
+	generateBuoyancyDemo();
 }
 
 
