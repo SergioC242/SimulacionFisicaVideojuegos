@@ -6,8 +6,8 @@ void BuoyancyForceGenerator::updateForce(Particle* p, float duration)
     if (_liquid_particle == nullptr) return; 
     
     // Alturas
-    float h = p->getPose()->p.y;                 // Altura del objeto
-    float h0 = _liquid_particle->getPose()->p.y; // Nivel del agua
+    float h = p->getPos()->p.y;                 // Altura del objeto
+    float h0 = _liquid_particle->getPos()->p.y; // Nivel del agua
 
     Vector3 f(0, 0, 0);
     float immersed = 0.0f;

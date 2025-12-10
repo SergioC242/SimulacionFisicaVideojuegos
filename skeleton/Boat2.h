@@ -32,7 +32,7 @@ public:
         
         physx::PxShape* hullShape = CreateShape(physx::PxBoxGeometry(2.0f, 0.2f, 1.0f));
         Vector4 colorHull = { 0.2f, 0.3f, 1.0f, 1.0f };
-        new RenderItem(hullShape, getPose(), colorHull);
+        new RenderItem(hullShape, getPos(), colorHull);
     }
 
 
@@ -58,7 +58,7 @@ public:
         Vector3D localForward(-1, 0, 0);
 
         // Transformarla según la rotación actual del barco
-        physx::PxQuat rotation = getPose()->q; // orientación real del cuerpo
+        physx::PxQuat rotation = getPos()->q; // orientación real del cuerpo
         physx::PxVec3 dirGlobal = rotation.rotate(physx::PxVec3(localForward.getX(), localForward.getY(), localForward.getZ()));
 
         Vector3D forwardDir(dirGlobal.x, dirGlobal.y, dirGlobal.z);
@@ -78,7 +78,7 @@ public:
 		WindMagic(t);
         integrate(t);
         applyKeelEffect(t);
-        getPose()->q = physx::PxQuat(headingAngle, physx::PxVec3(0, 1, 0));
+        getPos()->q = physx::PxQuat(headingAngle, physx::PxVec3(0, 1, 0));
         // Ajuste de la velocidad al girar
         Vector3D currentVel = getVelocity();
         float speed = currentVel.Modulo();
@@ -104,7 +104,7 @@ public:
 
         // Dirección hacia adelante del barco (proa) usando la rotación real
         Vector3D localForward(-1, 0, 0);
-        physx::PxQuat rotation = getPose()->q;
+        physx::PxQuat rotation = getPos()->q;
         physx::PxVec3 dirGlobal = rotation.rotate(physx::PxVec3(localForward.getX(), localForward.getY(), localForward.getZ()));
         Vector3D forwardDir(dirGlobal.x, dirGlobal.y, dirGlobal.z);
 
@@ -193,7 +193,7 @@ public:
                 Vector3D localForward(-1, 0, 0);
 
                 // Transformarla según la rotación actual del barco
-                physx::PxQuat rotation = getPose()->q; // orientación real del cuerpo
+                physx::PxQuat rotation = getPos()->q; // orientación real del cuerpo
                 physx::PxVec3 dirGlobal = rotation.rotate(physx::PxVec3(localForward.getX(), localForward.getY(), localForward.getZ()));
 
                 Vector3D forwardDir(dirGlobal.x, dirGlobal.y, dirGlobal.z);

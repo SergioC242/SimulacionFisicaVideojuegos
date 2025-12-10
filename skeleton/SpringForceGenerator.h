@@ -23,14 +23,14 @@ public:
 	{
 		if (particle->getMass() <= 0.0f) return;
 
-		//physx::PxVec3 pos = particle->getPose()->p;
+		//physx::PxVec3 pos = particle->getPos()->p;
 		//Si no existe la segunda particula
 		if (p2 == nullptr)
 		{
 			return;
 		}
 
-		Vector3 relative_pos_vector = p2->getPose()->p - particle->getPose()->p;
+		Vector3 relative_pos_vector = p2->getPos()->p - particle->getPos()->p;
 		Vector3 force;
 
 		// normalize: Normalize the relative_pos_vector and returns its length.

@@ -22,7 +22,7 @@ public:
     {
         if (particle->getMass() <= 0.0f) return;
 
-        physx::PxVec3 pos = particle->getPose()->p;
+        physx::PxVec3 pos = particle->getPos()->p;
 		//Si no esta dentro del area
         if (pos.x < areaMin.getX() || pos.x > areaMax.getX() ||
             pos.y < areaMin.getY() || pos.y > areaMax.getY() ||
