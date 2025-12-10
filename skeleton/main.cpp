@@ -86,11 +86,11 @@ static void generateBuoyancyDemo()
 
 	// 2 partículas que flotarán
 	Particle* p1 = new Particle(
-		{ 0.0, 6.0, 0.0 },   
+		{ 0.0, 7.0, 0.0 },   
 		{ 0.0, 0.0, 0.0 },
 		{ 0.0, 0.0, 0.0 },
 		0.85f,
-		1000.0f, { 1, 1, 0, 1 }
+		1.0f, { 1, 1, 0, 1 }
 	);
 	p1->setMass(1.0f);
 
@@ -104,7 +104,7 @@ static void generateBuoyancyDemo()
 	//p2->setMass(1.5f);
 
 
-	BuoyancyForceGenerator* b1 = new BuoyancyForceGenerator(3.0f, 1.0f, 10.0f);
+	BuoyancyForceGenerator* b1 = new BuoyancyForceGenerator(1.0f, 1000.0f);
 	GravityForceGenerator* g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
 	//BuoyancyForceGenerator* b2 = new BuoyancyForceGenerator(3.0f, 1.0f, 1000.0f);
 
@@ -187,7 +187,7 @@ void initPhysics(bool interactive)
 
 	//boat = new Boat2({ 0, 0, 0 }, { 10, 0, 0 });
 
-	//generateSpringDemo();
+	generateSpringDemo();
 	generateBuoyancyDemo();
 }
 

@@ -13,6 +13,7 @@ void BuoyancyForceGenerator::updateForce(Particle* p, float duration)
     float immersed = 0.0f;
 
     // 1) Está completamente fuera del agua
+    _height = p->getHeight();
     if (h - h0 > _height * 0.5f) {
         immersed = 0.0f;
     }

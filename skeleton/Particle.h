@@ -31,6 +31,8 @@ public:
 	Vector3D getVelocity() const { return vel; }
 	physx::PxTransform* getPose() const { return pose; }
 
+	float getHeight() const { return rad * 2; }
+
 
 private:
 	Vector3D vel;
@@ -41,6 +43,8 @@ private:
 	float LifeSpan; 
 	float Mass; // Not used if not projectile
 	Vector3D force;
+
+	float rad = 0.5f;
 
 	//vector de forces
 	std::vector<ForceGenerator*> forceGenerators;
