@@ -19,6 +19,7 @@
 #include "Boat2.h"
 #include "SpringForceGenerator.h"
 #include "BuoyancyForceGenerator.h"
+#include "SolidRigid.h"
 
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
@@ -52,6 +53,10 @@ ParticleSystem* Ps;
 //Barco
 Boat2* boat;
 
+
+//Fisica SOLID RIGID
+SolidRigid physics;
+
 //viento
 WindForceGenerator* wind1;
 bool windActive = true;
@@ -72,6 +77,24 @@ static void generateSpringDemo() {
 	canonballs.push_back(p2);
 }
 
+static void generateSolids() {
+	
+
+	physics.initPhysics(gPhysics, gScene);
+
+	// Crear suelo estático
+	physics.createStaticBox(PxVec3(15, 15, 15), PxVec3(10, 10, 10));
+
+	// Crear cubo dinámico
+	physics.createDynamicBox(
+		PxVec3(0, 5, 0),          // posición
+		PxVec3(0.5f),           // mitad de cada lado
+		0.15f,                  // densidad
+		PxVec3(0, 0, 0)           // velocidad inicial
+	);
+
+}
+
 static void generateBuoyancyDemo()
 {
 	// Partícula representando el nivel del agua
@@ -89,7 +112,7 @@ static void generateBuoyancyDemo()
 		{ 0.0, 7.0, 0.0 },   
 		{ 0.0, 0.0, 0.0 },
 		{ 0.0, 0.0, 0.0 },
-		0.85f,
+		1.0f,
 		1.0f, { 1, 1, 0, 1 }
 	);
 	p1->setMass(1.0f);
@@ -187,8 +210,10 @@ void initPhysics(bool interactive)
 
 	//boat = new Boat2({ 0, 0, 0 }, { 10, 0, 0 });
 
-	generateSpringDemo();
-	generateBuoyancyDemo();
+	//generateSpringDemo();
+	//generateBuoyancyDemo();
+
+	generateSolids();
 }
 
 
@@ -210,6 +235,7 @@ void stepPhysics(bool interactive, double t)
 	for (auto canonBall : canonballs)
 		canonBall->integrate(t);
 	if(boat)boat->update(t);
+	physics.stepPhysics(t);
 }
 
 // Function to clean data

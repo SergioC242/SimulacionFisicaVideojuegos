@@ -20,6 +20,7 @@
     <ClCompile Include="Boat2.cpp" />
     <ClCompile Include="SpringForceGenerator.cpp" />
     <ClCompile Include="BuoyancyForceGenerator.cpp" />
+    <ClCompile Include="SolidRigid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Boat2.h" />
     <ClInclude Include="SpringForceGenerator.h" />
     <ClInclude Include="BuoyancyForceGenerator.h" />
+    <ClInclude Include="SolidRigid.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Render">
