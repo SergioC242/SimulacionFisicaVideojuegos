@@ -29,14 +29,14 @@ public:
 	void setVelocity(const Vector3D& v) { vel = v; } //solo para que el barco rote la velocidad segun su rumbo NO USAR PARA NADA MAS
 
 	Vector3D getVelocity() const { return vel; }
-	physx::PxTransform* getPos() const { return pose; }
+	physx::PxTransform* getPos() const { return pos; }
 
 	float getHeight() const { return rad * 2; }
 
 
 private:
 	Vector3D vel;
-	physx::PxTransform* pose = nullptr;
+	physx::PxTransform* pos = nullptr;
 	RenderItem* renderItem = nullptr;
 	Vector3D acceleration = Vector3D(0, 0, 0);
 	float damping = 0.99;

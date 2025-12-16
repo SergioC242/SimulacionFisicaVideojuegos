@@ -21,7 +21,7 @@ bool SolidRigid::initPhysics(PxPhysics* gP, PxScene* gS)
 
     // Scene
     PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-    sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+    //sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 
     sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.filterShader = PxDefaultSimulationFilterShader;
@@ -67,7 +67,10 @@ PxRigidDynamic* SolidRigid::createDynamicBox(const PxVec3& pos, const PxVec3& ha
     PxRigidBodyExt::updateMassAndInertia(*actor, density);
 
     // Velocidad inicial
-    actor->setLinearVelocity(initLinearVel);
+    //actor->setLinearVelocity(initLinearVel);
+
+    //make it not have gravity
+	actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 
     renderItems.push_back(new RenderItem(shape, actor, Vector4(0.5f, 0.5f, 0.5f, 1.0f)));
     gScene->addActor(*actor);

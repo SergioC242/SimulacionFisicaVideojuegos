@@ -1,3 +1,5 @@
+
+
 #include <ctype.h>
 
 #include <PxPhysicsAPI.h>
@@ -83,14 +85,13 @@ static void generateSolids() {
 	physics.initPhysics(gPhysics, gScene);
 
 	// Crear suelo estático
-	physics.createStaticBox(PxVec3(15, 15, 15), PxVec3(10, 10, 10));
+	physics.createStaticBox(PxVec3(15, 15, 15), PxVec3(10));
 
 	// Crear cubo dinámico
 	physics.createDynamicBox(
-		PxVec3(0, 5, 0),          // posición
+		PxVec3(0, 20, 0),          // posición
 		PxVec3(0.5f),           // mitad de cada lado
-		0.15f,                  // densidad
-		PxVec3(0, 0, 0)           // velocidad inicial
+		0.15f                  // densidad
 	);
 
 }
@@ -144,6 +145,16 @@ static void generateBuoyancyDemo()
 	canonballs.push_back(liquidLevel);
 	canonballs.push_back(p1);
 	//canonballs.push_back(p2);
+}
+
+static void generateBoatDemo()
+{
+	//wind
+	Ps = new ParticleSystem(7000.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 0.3f);
+	WindForceGenerator* wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
+	Ps->addForceGenerator(wind1);
+
+	boat = new Boat2({ 0, 0, 0 }, { 10, 0, 0 });
 }
 
 
@@ -213,7 +224,8 @@ void initPhysics(bool interactive)
 	//generateSpringDemo();
 	//generateBuoyancyDemo();
 
-	generateSolids();
+	//generateSolids();
+	generateBoatDemo();
 }
 
 
@@ -229,8 +241,11 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 	//myParticle->integrate(t);
-	//Ps->updateAll(t);
-	//Ps->integrateAll(t);
+	if(Ps)
+	{
+		Ps->updateAll(t);
+		Ps->integrateAll(t);
+	}
 
 	for (auto canonBall : canonballs)
 		canonBall->integrate(t);

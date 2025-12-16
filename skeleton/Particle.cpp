@@ -1,3 +1,5 @@
+
+
 #include "Particle.h"
 
 #include "ForceGenerator.h"
@@ -5,19 +7,20 @@
 Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float lifespam, Vector4 col) :
     vel(Vel), Mass(mass), acceleration(Accel), LifeSpan(lifespam)
 {
-    pose = new physx::PxTransform(physx::PxVec3(Pos.getX(), Pos.getY(), Pos.getZ()));
-    renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(rad)), pose, col);
+    pos = new physx::PxTransform(physx::PxVec3(Pos.getX(), Pos.getY(), Pos.getZ()));
+    renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(rad)), pos, col);
 }
 
 Particle::~Particle()
 {
     if (renderItem) {
-        delete renderItem;
+        //delete renderItem;
+		renderItem->release();
         renderItem = nullptr;
     }
-    if (pose) {
-        delete pose;
-        pose = nullptr;
+    if (pos) {
+        delete pos;
+        pos = nullptr;
     }
     
 }
@@ -42,9 +45,9 @@ void Particle::integrate(float duration)
     vel *= powf(damping, duration);
 
     // Actualizar posición con la nueva velocidad
-    pose->p.x += vel.getX() * duration;
-    pose->p.y += vel.getY() * duration;
-    pose->p.z += vel.getZ() * duration;
+    pos->p.x += vel.getX() * duration;
+    pos->p.y += vel.getY() * duration;
+    pos->p.z += vel.getZ() * duration;
 
     force = Vector3D(0, 0, 0);
 }

@@ -1,5 +1,6 @@
 #include "Particle.h"
 #include <vector>
+#include <list>
 #include "Vector3D.h"
 #include <PxPhysicsAPI.h>
 #include "ForceGenerator.h"
@@ -9,7 +10,8 @@ using namespace physx;
 class ParticleSystem
 {
 private:
-    std::vector<Particle*> particles;
+    std::list<Particle*> particles;
+    std::vector<Particle*> dParticles;
     std::vector<ForceGenerator*> forceGenerators;
 
     Vector3D globalAcceleration;
@@ -94,7 +96,7 @@ public:
             timeSinceLastSpawn -= (1.0f / spawnRate);
         }
 
-        //clearDeadParticles();
+        clearDeadParticles();
     }
 
     void integrateAll(double t)
@@ -111,19 +113,26 @@ public:
 
     void clearDeadParticles()
     {
-        //for (auto it = particles.begin(); it != particles.end(); )
+        for (auto it = particles.begin(); it != particles.end();)
+        {
+            // Eliminar partículas muertas
+            if (!(*it)->isAlive())
+            {
+				delete *it;
+                it = particles.erase(it);
+                //it = particles.erase(std::remove(particles.begin(), particles.end(), *it), particles.end());
+				//dParticles.push_back(it);
+            }
+            else {
+				++it;
+            }
+        }
+        //for (Particle* it : dParticles)
         //{
-        //    // Eliminar partículas que caigan por debajo de cierta altura
-        //    if ((*it)->getPosition().y < -20.0f) // Ajusta según necesites
-        //    {
-        //        delete* it;
-        //        it = particles.erase(it);
-        //    }
-        //    else
-        //    {
-        //        ++it;
-        //    }
+		//	particles.erase(std::remove(particles.begin(), particles.end(), it), particles.end());
+        //    //delete it;
         //}
+		//dParticles.clear();
     }
 };
 

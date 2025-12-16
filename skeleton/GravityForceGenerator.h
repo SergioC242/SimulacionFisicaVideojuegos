@@ -19,4 +19,7 @@ public:
         Vector3D force = gravity * particle->getMass();
         particle->addForce(force);
     }
+    void updateForce(physx::PxRigidDynamic* rigid, float duration) override {
+		rigid->addForce(physx::PxVec3(gravity.getX(), gravity.getY(), gravity.getZ()) * rigid->getMass());
+    }
 };
