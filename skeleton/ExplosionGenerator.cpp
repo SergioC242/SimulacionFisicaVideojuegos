@@ -2,7 +2,7 @@
 
 
 ExplosionGenerator::ExplosionGenerator(const Vector3D& pos, float range, float fuerza, float time, float timAct, bool active) :
-	mPos(pos), range(range), fuerza(fuerza), time(time), timAct(timAct), active(active)
+	mPos(pos), range(range), fuerza(fuerza), time(0), timAct(timAct), active(active)
 {
 }
 
@@ -16,29 +16,48 @@ Vector3D ExplosionGenerator::getForce(Particle* aux)
 
 	Vector3D vector = pos - mPos;
 	float distancia = vector.Modulo();
+	
+	if (range >= distancia)
+	{
 
-	// Comprobaciones de rango y activación
-	if (!active) return Vector3D(0, 0, 0);
-	if (distancia <= 0.0f) return Vector3D(0, 0, 0); // evitar división por cero
-	if (distancia > range) return Vector3D(0, 0, 0);
 
-	// Intensidad que decae con el cuadrado de la distancia
-	float powerF = fuerza / (distancia * distancia);
+		// Comprobaciones de rango y activación
+		if (!active) return Vector3D(0, 0, 0);
+		if (distancia <= 0.0f) return Vector3D(0, 0, 0); // evitar división por cero
+		if (distancia > range) return Vector3D(0, 0, 0);
 
-	// Factor temporal (seguí la lógica original usando `time` y `timAct`)
-	float dT = ((time - timAct) / time);
-	float timeF = expf(-dT); // e^{-dT}
+		// Intensidad que decae con el cuadrado de la distancia
+		float powerF = fuerza / (distancia * distancia);
 
-	// Dirección proporcional al vector desde la explosión hacia la partícula
-	float rX = powerF * vector.getX() * timeF;
-	float rY = powerF * vector.getY() * timeF;
-	float rZ = powerF * vector.getZ() * timeF;
+		// Factor temporal (seguí la lógica original usando `time` y `timAct`)
+		float dT = ((time - timAct) / time);
+		float timeF = expf(-dT); // e^{-dT}
 
-	return Vector3D(rX, rY, rZ);
+		// Dirección proporcional al vector desde la explosión hacia la partícula
+		float rX = powerF * vector.getX() * timeF;
+		float rY = powerF * vector.getY() * timeF;
+		float rZ = powerF * vector.getZ() * timeF;
+
+		return Vector3D(rX, rY, rZ);
+	}
+	else
+	{
+		return Vector3D(0, 0, 0);
+	}
 }
 
-void ExplosionGenerator::updateForce(Particle* particle, float /*duration*/)
+void ExplosionGenerator::updateForce(Particle* particle, float d/*duration*/)
 {
+	time += d;
+	if(gTime)
+	{
+		gTime = false;
+		timAct = time;
+	}
+	if(time/10 >= activeTime + timAct/10)
+	{
+		active = false;
+	}
 	// Aplicar la fuerza calculada directamente a la partícula
 	if (!particle) return;
 	Vector3D f = getForce(particle);

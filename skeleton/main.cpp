@@ -22,6 +22,7 @@
 #include "SpringForceGenerator.h"
 #include "BuoyancyForceGenerator.h"
 #include "SolidRigid.h"
+#include "ExplosionGenerator.h"
 
 
 std::string display_text = "IS DEATH THE MEANING OF LIFE? NO ITS DELTARUNE CHAPTER 8";
@@ -61,6 +62,7 @@ SolidRigid physics;
 
 //viento
 WindForceGenerator* wind1;
+ExplosionGenerator* explosion;
 bool windActive = true;
 
 static void generateSpringDemo() {
@@ -159,6 +161,12 @@ static void generateBoatDemo()
 	boat = new Boat2({ 0, 0, 0 }, { 10, 0, 0 });
 }
 
+static void generateExplosionDemo() {
+	Ps = new ParticleSystem(10.0f, 10.0f, 10.0f, 10.0f, Vector3D(0, 10, 0), Vector3D(0, 0, 0), 10.0f);
+	explosion = new ExplosionGenerator(Vector3D(0.0f, 10.0f, 0.0f), 500.0f, 20.0f);
+	Ps->addForceGenerator(explosion);
+}
+
 
 // Initialize physics engine
 void initPhysics(bool interactive)
@@ -226,8 +234,10 @@ void initPhysics(bool interactive)
 	//generateSpringDemo();
 	//generateBuoyancyDemo();
 
-	generateSolids();
+	//generateSolids();
 	//generateBoatDemo();
+
+	generateExplosionDemo();
 }
 
 
@@ -319,19 +329,23 @@ void keyPress(unsigned char key, const PxTransform& camera)
 	case 'Z':
 	{
 		// Toggle del viento
-		if (windActive)
-		{
-			// Desactivar viento (establecer velocidad a 0)
-			wind1->setWindVelocity(Vector3D(0.0f, 0.0f, 0.0f));
-			windActive = false;
-			std::cout << "Viento DESACTIVADO" << std::endl;
-		}
-		else
-		{
-			// Activar viento (restaurar velocidad original)
-			wind1->setWindVelocity(Vector3D(50.0f, 0.0f, 0.0f));
-			windActive = true;
-			std::cout << "Viento ACTIVADO" << std::endl;
+		//if (windActive)
+		//{
+		//	// Desactivar viento (establecer velocidad a 0)
+		//	wind1->setWindVelocity(Vector3D(0.0f, 0.0f, 0.0f));
+		//	windActive = false;
+		//	std::cout << "Viento DESACTIVADO" << std::endl;
+		//}
+		//else
+		//{
+		//	// Activar viento (restaurar velocidad original)
+		//	wind1->setWindVelocity(Vector3D(50.0f, 0.0f, 0.0f));
+		//	windActive = true;
+		//	std::cout << "Viento ACTIVADO" << std::endl;
+		//}
+		if(explosion) {
+			explosion->trigger();
+			std::cout << "Explosion triggered!" << std::endl;
 		}
 		break;
 	}

@@ -13,6 +13,9 @@ private:
 	float time;    // tiempo total de la explosión (segundos)
 	float timAct;  // tiempo actual o tiempo de activación
 	bool active;
+	bool gTime = false;
+
+	float activeTime = 10.0f;
 
 public:
 	ExplosionGenerator(const Vector3D& pos = Vector3D(0, 0, 0),
@@ -31,5 +34,5 @@ public:
 	// Helpers
 	void setPosition(const Vector3D& pos) { mPos = pos; }
 	void setActive(bool a) { active = a; }
-	void trigger(float currentTime) { timAct = currentTime; active = true; }
+	void trigger() { gTime = true; active = true; }
 };
