@@ -80,12 +80,12 @@ static void generateSpringDemo() {
 }
 
 static void generateSolids() {
-	
+
 
 	physics.initPhysics(gPhysics, gScene);
 
 	// Crear suelo estático
-	physics.createStaticBox(PxVec3(15, 15, 15), PxVec3(10));
+	//physics.createStaticBox(PxVec3(15, 15, 15), PxVec3(10));
 
 	// Crear cubo dinámico
 	physics.createDynamicBox(
@@ -93,7 +93,9 @@ static void generateSolids() {
 		PxVec3(0.5f),           // mitad de cada lado
 		0.15f                  // densidad
 	);
-
+	GravityForceGenerator* g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
+	WindForceGenerator* wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
+	physics.addForceGenerator(wind1);
 }
 
 static void generateBuoyancyDemo()
@@ -101,16 +103,16 @@ static void generateBuoyancyDemo()
 	// Partícula representando el nivel del agua
 	// Su posición Y determina la altura del líquido
 	Particle* liquidLevel = new Particle(
-		{ 0.0, 5.0, 0.0 },    
+		{ 0.0, 5.0, 0.0 },
 		{ 0.0, 0.0, 0.0 },
 		{ 0.0, 0.0, 0.0 },
-		1.0f,               
-		0.0f                  
+		1.0f,
+		0.0f
 	);
 
 	// 2 partículas que flotarán
 	Particle* p1 = new Particle(
-		{ 0.0, 7.0, 0.0 },   
+		{ 0.0, 7.0, 0.0 },
 		{ 0.0, 0.0, 0.0 },
 		{ 0.0, 0.0, 0.0 },
 		1.0f,
@@ -150,7 +152,7 @@ static void generateBuoyancyDemo()
 static void generateBoatDemo()
 {
 	//wind
-	Ps = new ParticleSystem(7000.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 0.3f);
+	Ps = new ParticleSystem(100.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 10.0f);
 	WindForceGenerator* wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
 	Ps->addForceGenerator(wind1);
 
@@ -224,8 +226,8 @@ void initPhysics(bool interactive)
 	//generateSpringDemo();
 	//generateBuoyancyDemo();
 
-	//generateSolids();
-	generateBoatDemo();
+	generateSolids();
+	//generateBoatDemo();
 }
 
 
@@ -241,7 +243,7 @@ void stepPhysics(bool interactive, double t)
 	gScene->fetchResults(true);
 
 	//myParticle->integrate(t);
-	if(Ps)
+	if (Ps)
 	{
 		Ps->updateAll(t);
 		Ps->integrateAll(t);
@@ -249,7 +251,7 @@ void stepPhysics(bool interactive, double t)
 
 	for (auto canonBall : canonballs)
 		canonBall->integrate(t);
-	if(boat)boat->update(t);
+	if (boat)boat->update(t);
 	physics.stepPhysics(t);
 }
 

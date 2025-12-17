@@ -40,7 +40,7 @@ private:
 	RenderItem* renderItem = nullptr;
 	Vector3D acceleration = Vector3D(0, 0, 0);
 	float damping = 0.99;
-	float LifeSpan; 
+	float LifeSpan;
 	float Mass; // Not used if not projectile
 	Vector3D force;
 
