@@ -162,7 +162,7 @@ static void generateBoatDemo()
 }
 
 static void generateExplosionDemo() {
-	Ps = new ParticleSystem(10.0f, 10.0f, 10.0f, 10.0f, Vector3D(0, 10, 0), Vector3D(0, 0, 0), 10.0f);
+	Ps = new ParticleSystem(10.0f, 10.0f, 10.0f, 10.0f, Vector3D(0, 10, 0), Vector3D(0, 0, 0), 10.0f, 5.0f);
 	explosion = new ExplosionGenerator(Vector3D(0.0f, 10.0f, 0.0f), 500.0f, 20.0f);
 	Ps->addForceGenerator(explosion);
 }
