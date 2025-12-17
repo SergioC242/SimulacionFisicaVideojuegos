@@ -16,7 +16,7 @@ Vector3D ExplosionGenerator::getForce(Particle* aux)
 
 	Vector3D vector = pos - mPos;
 	float distancia = vector.Modulo();
-	
+
 	if (range >= distancia)
 	{
 
@@ -49,12 +49,12 @@ Vector3D ExplosionGenerator::getForce(Particle* aux)
 void ExplosionGenerator::updateForce(Particle* particle, float d/*duration*/)
 {
 	time += d;
-	if(gTime)
+	if (gTime)
 	{
 		gTime = false;
 		timAct = time;
 	}
-	if(time/10 >= activeTime + timAct/10)
+	if (time / 10 >= activeTime + timAct / 10)
 	{
 		active = false;
 	}

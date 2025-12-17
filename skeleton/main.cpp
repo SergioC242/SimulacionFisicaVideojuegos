@@ -343,7 +343,7 @@ void keyPress(unsigned char key, const PxTransform& camera)
 		//	windActive = true;
 		//	std::cout << "Viento ACTIVADO" << std::endl;
 		//}
-		if(explosion) {
+		if (explosion) {
 			explosion->trigger();
 			std::cout << "Explosion triggered!" << std::endl;
 		}
