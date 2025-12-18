@@ -181,7 +181,7 @@ static void generateBoatDemo()
 
 	// create sea level
 	// For where i spawn particles from -100 to 100 in x and z, and from 5 to 6 in y and all affected by gravity and buoyancy
-	BuoyancyForceGenerator* b2 = new BuoyancyForceGenerator(1.0f, 5.0f); // for consistency
+	b2 = new BuoyancyForceGenerator(1.0f, 5.0f); // for consistency
 	for (int i = 0; i < 50; i++)
 	{
 		float X = -i * 4 + 30;
@@ -373,8 +373,6 @@ void keyPress(unsigned char key, const PxTransform& camera)
 
 	switch (toupper(key))
 	{
-		//case 'B': break;
-		//case ' ':	break;
 	case ' ':
 	{
 		break;
