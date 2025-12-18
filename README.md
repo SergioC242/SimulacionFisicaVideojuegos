@@ -1,8 +1,20 @@
-# SimulacionFisicaVideojuegos
-Repositorio de las prácticas de la asignatura de Simulación Física de Videojuegos
+# Entrega Final Controles
 
-En la carpeta skeleton estará vuestro código fuente
+El barco empieza mirando a la izquierda
 
-Necesitaréis además descomprimir el archivo que se indica a continuación en la raíz del repositorio:
+IJKL Para mover el barco:
 
-Carpetas bin y common https://ucomplutense-my.sharepoint.com/:f:/g/personal/liagar05_ucm_es/ElNxHPmZVj9Ni9-8FKTKp7cBJHAarnL3vvEvG50z0QMrzg
+-I: Larga Vela == Aumenta el angulo de la vela respecto al barco
+
+-K: Cazar Vela == Decrece el angulo de la vela respecto al barco
+
+-J: Gira a la derecha
+
+-L: Gira a la izquierda
+
+(Esta aposta invertido a como seria en un coche)
+
+
+
+
+

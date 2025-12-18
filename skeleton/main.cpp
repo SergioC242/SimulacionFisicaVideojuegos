@@ -52,6 +52,7 @@ std::vector<Particle*> canonballs;
 
 //sistema de ñparticulas
 ParticleSystem* Ps;
+ParticleSystem* Ps2;
 
 //Barco
 Boat2* boat;
@@ -209,9 +210,9 @@ static void generateBoatDemo()
 }
 
 static void generateExplosionDemo() {
-	Ps = new ParticleSystem(10.0f, 10.0f, 10.0f, 10.0f, Vector3D(0, 10, 0), Vector3D(0, 0, 0), 1.0f, 0.5f);
+	Ps2 = new ParticleSystem(10.0f, 10.0f, 10.0f, 10.0f, Vector3D(0, 10, 0), Vector3D(0, 0, 0), 1.0f, 0.5f);
 	explosion = new ExplosionGenerator(Vector3D(0.0f, 10.0f, 0.0f), 500.0f, 20.0f);
-	Ps->addForceGenerator(explosion);
+	Ps2->addForceGenerator(explosion);
 }
 
 
@@ -305,6 +306,11 @@ void stepPhysics(bool interactive, double t)
 		Ps->updateAll(t);
 		Ps->integrateAll(t);
 	}
+	if (Ps2)
+	{
+		Ps2->updateAll(t);
+		Ps2->integrateAll(t);
+	}
 
 	for (auto canonBall : canonballs)
 		canonBall->integrate(t);
@@ -322,7 +328,7 @@ void stepPhysics(bool interactive, double t)
 		//	//cam->setDir(physx::PxVec3(boatPos.getX() - (boatPos.getX() + offset.getX()),
 		//	//	boatPos.getY() - (boatPos.getY() + offset.getY()),
 		//	//	boatPos.getZ() - (boatPos.getZ() + offset.getZ())).getNormalized());
-		//}
+		//} //No va por eso se lo comento
 	}
 	physics.stepPhysics(t);
 }
@@ -356,7 +362,6 @@ void cleanupPhysics(bool interactive)
 	if (g1) delete g1;
 	if (explosion) delete explosion;
 	if (b2) delete b2;
-
 
 	gFoundation->release();
 }
