@@ -5,6 +5,10 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm> 
+#include <sstream>
+#include <string>
+
+extern std::string display_text;
 
 class Boat2 : public Particle
 {
@@ -184,10 +188,15 @@ public:
             // Eficiencia combinada
             efficiency = windEffect * sailEffect * speedFactor;
 
-            std::cout << "Angle: " << angleDeg << " | Ideal Sail: " << idealSailAngle
-                << " | Current Sail: " << sailAngle << " | Wind: " << windEffect
-                << " | Sail: " << sailEffect << " | Efficiency: " << efficiency << std::endl;
-
+            // Construimos la cadena y la mostramos en pantalla (render)
+            {
+                std::ostringstream oss;
+                oss.setf(std::ios::fixed); oss.precision(2);
+                oss << "Angle: " << angleDeg << " | Ideal Sail: " << idealSailAngle
+                    << " | Current Sail: " << sailAngle << " | Wind: " << windEffect
+                    << " | Sail: " << sailEffect << " | Efficiency: " << efficiency;
+                display_text = oss.str();
+            }
 
             if (efficiency > 0.0f)
             {
