@@ -3,11 +3,11 @@
 void BuoyancyForceGenerator::updateForce(Particle* p, float duration)
 {
 	if (p->getMass() <= 0.0f) return;
-	if (_liquid_particle == nullptr) return;
+	//if (_liquid_particle != nullptr) _height = _liquid_particle->getPos()->p.y;
 
 	// Alturas
 	float h = p->getPos()->p.y;                 // Altura del objeto
-	float h0 = _liquid_particle->getPos()->p.y; // Nivel del agua
+	float h0 = _height; // Nivel del agua
 
 	Vector3 f(0, 0, 0);
 	float immersed = 0.0f;
@@ -27,7 +27,7 @@ void BuoyancyForceGenerator::updateForce(Particle* p, float duration)
 	}
 
 	// Fuerza de flotación
-	f.y = _liquid_density * _volume * immersed * _gravity;
+	f.y = _liquid_density * p->getVolume() * immersed * _gravity;
 
 	p->addForce({ f.x, f.y, f.z });
 }

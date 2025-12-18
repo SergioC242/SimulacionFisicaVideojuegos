@@ -20,6 +20,7 @@ private:
 	float particleLifeSpan;
 	Vector3D position;
 	float size;
+	Vector4 color;
 
 	// Parámetros para el área de spawn
 	float spawnWidth;
@@ -47,7 +48,7 @@ public:
 		float spawnHeight = 50.0f,
 		Vector3D pos = Vector3D(0, 50, 0),
 		Vector3D globalAcc = Vector3D(0, 0, 0),
-		float particleLifeSpan = 10.0f, float size = 0.5f)
+		float particleLifeSpan = 10.0f, float size = 0.5f, Vector4 col = {1, 1, 1, 1})
 		: spawnRate(spawnRate),
 		spawnWidth(spawnWidth),
 		spawnDepth(spawnDepth),
@@ -55,7 +56,8 @@ public:
 		position(pos),
 		globalAcceleration(globalAcc),
 		particleLifeSpan(particleLifeSpan),
-		timeSinceLastSpawn(0.0f)
+		timeSinceLastSpawn(0.0f),
+		color(col)
 	{
 	}
 
@@ -90,8 +92,8 @@ public:
 
 			Vector3D initialVelocity = Vector3D(0, 0, 0);
 
-			// Crear nueva partícula
-			Particle* newParticle = new Particle(spawnPos, initialVelocity, globalAcceleration, 1.0f);
+			// Crear nueva partícula (Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float lifespam, Vector4 col, float size)
+			Particle* newParticle = new Particle(spawnPos, initialVelocity, globalAcceleration, 1.0f, particleLifeSpan, color, 0.2f);
 			addParticle(newParticle);
 
 			timeSinceLastSpawn -= (1.0f / spawnRate);

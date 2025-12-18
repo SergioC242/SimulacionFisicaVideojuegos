@@ -60,9 +60,14 @@ Boat2* boat;
 //Fisica SOLID RIGID
 SolidRigid physics;
 
-//viento
-WindForceGenerator* wind1;
-ExplosionGenerator* explosion;
+//Fo9rce generators
+WindForceGenerator* wind1 = nullptr;
+ExplosionGenerator* explosion = nullptr;
+BuoyancyForceGenerator* b1 = nullptr;
+BuoyancyForceGenerator* b2 = nullptr;
+GravityForceGenerator* g1= nullptr;
+
+
 bool windActive = true;
 
 static void generateSpringDemo() {
@@ -87,16 +92,24 @@ static void generateSolids() {
 	physics.initPhysics(gPhysics, gScene);
 
 	// Crear suelo estático
-	//physics.createStaticBox(PxVec3(15, 15, 15), PxVec3(10));
+	physics.createStaticBox(PxVec3(50, 15, -50), PxVec3(10));
 
 	// Crear cubo dinámico
 	physics.createDynamicBox(
-		PxVec3(0, 20, 0),          // posición
+		PxVec3(0, 20, -50),          // posición
 		PxVec3(0.5f),           // mitad de cada lado
 		0.15f                  // densidad
 	);
-	GravityForceGenerator* g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
-	WindForceGenerator* wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
+	
+	//Crear esfera dinámica
+	physics.createDynamicSphere(
+		PxVec3(5, 30, 0),    // posición
+		0.5f,               // radio
+		0.15f               // densidad
+	);
+
+	//g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
+	//wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
 	physics.addForceGenerator(wind1);
 }
 
@@ -132,9 +145,10 @@ static void generateBuoyancyDemo()
 	//p2->setMass(1.5f);
 
 
-	BuoyancyForceGenerator* b1 = new BuoyancyForceGenerator(1.0f, 1000.0f);
-	GravityForceGenerator* g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
+	
 	//BuoyancyForceGenerator* b2 = new BuoyancyForceGenerator(3.0f, 1.0f, 1000.0f);
+	b1 = new BuoyancyForceGenerator(1.0f, 1000.0f);
+	g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
 
 	// Indicamos quién marca el nivel del agua
 	b1->setLiquidParticle(liquidLevel);
@@ -153,16 +167,49 @@ static void generateBuoyancyDemo()
 
 static void generateBoatDemo()
 {
+	
+
 	//wind
-	Ps = new ParticleSystem(100.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 10.0f);
-	WindForceGenerator* wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
+	Ps = new ParticleSystem(100.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 10.0f, 0.1f, {0, 0.5, 1, 1});
+
+	//generate forces
+	b1 = new BuoyancyForceGenerator(1.0f, 1000.0f);
+	g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
+	wind1 = new WindForceGenerator(Vector3D(50.0f, 0.0f, 0.0f));
 	Ps->addForceGenerator(wind1);
 
-	boat = new Boat2({ 0, 0, 0 }, { 10, 0, 0 });
+	// create sea level
+	// For where i spawn particles from -100 to 100 in x and z, and from 5 to 6 in y and all affected by gravity and buoyancy
+	BuoyancyForceGenerator* b2 = new BuoyancyForceGenerator(1.0f, 5.0f); // for consistency
+	for (int i = 0; i < 50; i++)
+	{
+		float X = -i * 4 + 30;
+		for (int j = 0; j < 50; j++)
+		{
+			float randomY = static_cast <float>(rand()) / (static_cast <float>(RAND_MAX / 1.0f));
+			//sin wave from 0 to 2
+			float waveY = sinf((i + j) * 0.4f) * 0.5f;
+			float Z = -j * 4 + 30;
+			Vector3D spawnPos = Vector3D(X, waveY + randomY + 3.5, Z);
+			Vector3D initialVelocity = Vector3D(0, 0, 0);
+			// Crear nueva partícula (Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float lifespam, Vector4 col, float size)
+			Particle* newParticle = new Particle(spawnPos, initialVelocity, Vector3D(0, 0, 0), 0.3f, -1.0f, Vector4(0, 0, 1, 1), 0.3f);
+			newParticle->addForceGenerator(b2);
+			newParticle->addForceGenerator(g1);
+			canonballs.push_back(newParticle);
+		}
+	}
+	//create boat
+	boat = new Boat2({ 0, 6.0, 0 }, { 10, 0, 0 });
+
+	
+
+	boat->addForceGenerator(b1);
+	boat->addForceGenerator(g1);
 }
 
 static void generateExplosionDemo() {
-	Ps = new ParticleSystem(10.0f, 10.0f, 10.0f, 10.0f, Vector3D(0, 10, 0), Vector3D(0, 0, 0), 10.0f, 5.0f);
+	Ps = new ParticleSystem(10.0f, 10.0f, 10.0f, 10.0f, Vector3D(0, 10, 0), Vector3D(0, 0, 0), 1.0f, 0.5f);
 	explosion = new ExplosionGenerator(Vector3D(0.0f, 10.0f, 0.0f), 500.0f, 20.0f);
 	Ps->addForceGenerator(explosion);
 }
@@ -234,10 +281,10 @@ void initPhysics(bool interactive)
 	//generateSpringDemo();
 	//generateBuoyancyDemo();
 
-	//generateSolids();
-	//generateBoatDemo();
-
-	generateExplosionDemo();
+	
+	generateBoatDemo();
+	generateSolids();
+	//generateExplosionDemo();
 }
 
 
@@ -261,7 +308,22 @@ void stepPhysics(bool interactive, double t)
 
 	for (auto canonBall : canonballs)
 		canonBall->integrate(t);
-	if (boat)boat->update(t);
+	if (boat)
+	{
+		boat->update(t);
+		Camera* cam = GetCamera();
+
+		//camera follow boat x, y ,z + offset 
+		//if (cam)
+		//{
+		//	physx::PxVec3 boatPos = boat->getPos()->p;
+		//	physx::PxVec3 offset = physx::PxVec3(0.0f, 5.0f, -15.0f); // Offset detrás y arriba del barco
+		//	//cam->handleMotion(boatPos.x + offset.x, boatPos.y + offset.y);
+		//	//cam->setDir(physx::PxVec3(boatPos.getX() - (boatPos.getX() + offset.getX()),
+		//	//	boatPos.getY() - (boatPos.getY() + offset.getY()),
+		//	//	boatPos.getZ() - (boatPos.getZ() + offset.getZ())).getNormalized());
+		//}
+	}
 	physics.stepPhysics(t);
 }
 
@@ -284,6 +346,17 @@ void cleanupPhysics(bool interactive)
 	{
 		delete canonBall;
 	}
+
+	if (Ps) delete Ps;
+	if (boat) delete boat;
+
+	//delete force generators
+	if (wind1) delete wind1;
+	if (b1) delete b1;
+	if (g1) delete g1;
+	if (explosion) delete explosion;
+	if (b2) delete b2;
+
 
 	gFoundation->release();
 }

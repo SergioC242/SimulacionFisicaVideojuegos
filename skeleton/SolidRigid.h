@@ -36,6 +36,8 @@ public:
 		float density,
 		const PxVec3& initLinearVel = PxVec3(0, 0, 0));
 
+	PxRigidDynamic* createDynamicSphere(const PxVec3& pos, float radius, float density, const PxVec3& initLinearVel = PxVec3(0, 0, 0));
+
 private:
 	PxFoundation* gFoundation;
 	PxPhysics* gPhysics;

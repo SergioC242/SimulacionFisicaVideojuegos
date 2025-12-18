@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <algorithm> 
+
 class Boat2 : public Particle
 {
 private:
@@ -20,7 +21,7 @@ private:
 
 public:
     Boat2(Vector3D position, const Vector3D& windVel, float headingDeg = 0.0f)
-        : Particle(position, Vector3D(0, 0, 0), Vector3D(0, 0, 0), 50.0f),
+        : Particle(position, Vector3D(0, 0, 0), Vector3D(0, 0, 0), 50.0f , -1, {1, 1, 1, 1}),
         windVelocity(windVel),
         headingAngle(headingDeg* (3.14159f / 180.0f)),
         turnRate(2.0f),
@@ -30,8 +31,8 @@ public:
         maxSideSpeedMultiplier(1.2f)
     {
         
-        physx::PxShape* hullShape = CreateShape(physx::PxBoxGeometry(2.0f, 0.2f, 1.0f));
-        Vector4 colorHull = { 0.2f, 0.3f, 1.0f, 1.0f };
+        physx::PxShape* hullShape = CreateShape(physx::PxBoxGeometry(3.0f, 0.5f, 1.5f));
+        Vector4 colorHull = { 1, 1, 1, 1.0f };
         new RenderItem(hullShape, getPos(), colorHull);
     }
 
@@ -183,8 +184,8 @@ public:
             // Eficiencia combinada
             efficiency = windEffect * sailEffect * speedFactor;
 
-            std::cout << "Angle: " << angleDeg << "° | Ideal Sail: " << idealSailAngle
-                << "° | Current Sail: " << sailAngle << "° | Wind: " << windEffect
+            std::cout << "Angle: " << angleDeg << " | Ideal Sail: " << idealSailAngle
+                << " | Current Sail: " << sailAngle << " | Wind: " << windEffect
                 << " | Sail: " << sailEffect << " | Efficiency: " << efficiency << std::endl;
 
 

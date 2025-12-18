@@ -8,8 +8,8 @@ class ForceGenerator;
 class Particle
 {
 public:
-	Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel = (0, 0, 0), float mass = 0.0f, float lifespam = 2.0f, Vector4 col = { 0, 0, 0.5, 1 }, float size = 0.5f);
-	~Particle();
+	Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel = (0, 0, 0), float mass = 0.0f, float lifespam = -1.0f, Vector4 col = {0, 0, 0.5, 1}, float size = 0.5f);
+	virtual ~Particle();
 
 	void integrate(float duration);
 	void changeAcceleration(Vector3D Acc) { acceleration = Acc; };
@@ -32,6 +32,7 @@ public:
 	physx::PxTransform* getPos() const { return pos; }
 
 	float getHeight() const { return rad * 2; }
+	float getVolume() const { return volume; }
 
 
 private:
@@ -45,6 +46,7 @@ private:
 	Vector3D force;
 
 	float rad = 0.5f;
+	float volume = 1.0f;
 
 	//vector de forces
 	std::vector<ForceGenerator*> forceGenerators;

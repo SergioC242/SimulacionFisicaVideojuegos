@@ -88,6 +88,14 @@ public:
 		return Vector3D(v.x, v.y, v.z);
 	}
 
+	//vector3D = PxVec3
+	Vector3D& operator=(const physx::PxVec3& v) {
+		x = v.x;
+		y = v.y;
+		z = v.z;
+		return *this;
+	}
+
 	//getters
 	float getX() { return x; }
 	float getY() { return y; }

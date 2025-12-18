@@ -9,15 +9,17 @@ Particle::Particle(Vector3D Pos, Vector3D Vel, Vector3D Accel, float mass, float
 {
 	pos = new physx::PxTransform(physx::PxVec3(Pos.getX(), Pos.getY(), Pos.getZ()));
 	renderItem = new RenderItem(CreateShape(physx::PxSphereGeometry(rad)), pos, col);
+
+	volume = (4.0f / 3.0f) * 3.1416f * rad * rad * rad;
 }
 
 Particle::~Particle()
 {
-	if (renderItem) {
-		//delete renderItem;
-		renderItem->release();
-		renderItem = nullptr;
-	}
+	//if (renderItem) {
+	//	//delete renderItem;
+	//	//renderItem->release();
+	//	//renderItem = nullptr;
+	//}
 	if (pos) {
 		delete pos;
 		pos = nullptr;
@@ -29,7 +31,7 @@ Particle::~Particle()
 void Particle::integrate(float duration)
 {
 	// Actualizar el tiempo de vida
-	LifeSpan -= duration / 10;
+	if(LifeSpan != -1) LifeSpan -= duration;
 	//metodo integracion de Euler semi-implicito
 	if (duration <= 0.0f) return;
 	for (ForceGenerator* fg : forceGenerators)
