@@ -65,7 +65,7 @@ WindForceGenerator* wind1 = nullptr;
 ExplosionGenerator* explosion = nullptr;
 BuoyancyForceGenerator* b1 = nullptr;
 BuoyancyForceGenerator* b2 = nullptr;
-GravityForceGenerator* g1= nullptr;
+GravityForceGenerator* g1 = nullptr;
 
 
 bool windActive = true;
@@ -100,7 +100,7 @@ static void generateSolids() {
 		PxVec3(0.5f),           // mitad de cada lado
 		0.15f                  // densidad
 	);
-	
+
 	//Crear esfera dinámica
 	physics.createDynamicSphere(
 		PxVec3(5, 30, 0),    // posición
@@ -145,7 +145,7 @@ static void generateBuoyancyDemo()
 	//p2->setMass(1.5f);
 
 
-	
+
 	//BuoyancyForceGenerator* b2 = new BuoyancyForceGenerator(3.0f, 1.0f, 1000.0f);
 	b1 = new BuoyancyForceGenerator(1.0f, 1000.0f);
 	g1 = new GravityForceGenerator(Vector3D(0.0f, -9.8f, 0.0f));
@@ -167,10 +167,10 @@ static void generateBuoyancyDemo()
 
 static void generateBoatDemo()
 {
-	
+
 
 	//wind
-	Ps = new ParticleSystem(100.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 10.0f, 0.1f, {0, 0.5, 1, 1});
+	Ps = new ParticleSystem(100.0f, 200.0f, 100.0f, 70.0f, Vector3D(0, -10, 0), Vector3D(0, 0, 0), 10.0f, 0.1f, { 0, 0.5, 1, 1 });
 
 	//generate forces
 	b1 = new BuoyancyForceGenerator(1.0f, 1000.0f);
@@ -202,7 +202,7 @@ static void generateBoatDemo()
 	//create boat
 	boat = new Boat2({ 0, 6.0, 0 }, { 10, 0, 0 });
 
-	
+
 
 	boat->addForceGenerator(b1);
 	boat->addForceGenerator(g1);
@@ -281,7 +281,7 @@ void initPhysics(bool interactive)
 	//generateSpringDemo();
 	//generateBuoyancyDemo();
 
-	
+
 	generateBoatDemo();
 	generateSolids();
 	//generateExplosionDemo();

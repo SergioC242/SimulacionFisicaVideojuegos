@@ -31,7 +31,7 @@ Particle::~Particle()
 void Particle::integrate(float duration)
 {
 	// Actualizar el tiempo de vida
-	if(LifeSpan != -1) LifeSpan -= duration;
+	if (LifeSpan != -1) LifeSpan -= duration;
 	//metodo integracion de Euler semi-implicito
 	if (duration <= 0.0f) return;
 	for (ForceGenerator* fg : forceGenerators)

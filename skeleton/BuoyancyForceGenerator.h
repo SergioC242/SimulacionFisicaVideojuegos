@@ -6,7 +6,7 @@
 class BuoyancyForceGenerator : public ForceGenerator
 {
 public:
-	BuoyancyForceGenerator( float V, float d, float h = 0.0f)
+	BuoyancyForceGenerator(float V, float d, float h = 0.0f)
 		: _height(h), _volume(V), _liquid_density(d), _gravity(9.8f),
 		_liquid_particle(nullptr)
 	{

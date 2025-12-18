@@ -48,7 +48,7 @@ public:
 		float spawnHeight = 50.0f,
 		Vector3D pos = Vector3D(0, 50, 0),
 		Vector3D globalAcc = Vector3D(0, 0, 0),
-		float particleLifeSpan = 10.0f, float size = 0.5f, Vector4 col = {1, 1, 1, 1})
+		float particleLifeSpan = 10.0f, float size = 0.5f, Vector4 col = { 1, 1, 1, 1 })
 		: spawnRate(spawnRate),
 		spawnWidth(spawnWidth),
 		spawnDepth(spawnDepth),
